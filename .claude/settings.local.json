@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(open *)",
+      "Bash(grep -iE '\\\\.\\(png|jpg|svg|gif\\)$')",
+      "WebFetch(domain:hikaru1357.github.io)",
+      "Bash(curl -s \"https://hikaru1357.github.io/midori-clinic-demo/design-top.html\")",
+      "Bash(cp \"/Users/ookubohikari/Downloads/ChatGPT Image 2026年5月16日 04_22_40 \\(1\\).png\" \"/Users/ookubohikari/HP制作事業/福祉HP模倣実験/syogen-careheart.com/cms/wp-content/themes/marutomirenta_theme/tmpl-img/illust_chair_stair.png\")",
+      "Bash(cp \"/Users/ookubohikari/Downloads/ChatGPT Image 2026年5月16日 04_22_40 \\(2\\).png\" \"/Users/ookubohikari/HP制作事業/福祉HP模倣実験/syogen-careheart.com/cms/wp-content/themes/marutomirenta_theme/tmpl-img/illust_cargo_stair.png\")",
+      "Bash(cp \"/Users/ookubohikari/Downloads/ChatGPT Image 2026年5月16日 04_22_41 \\(3\\).png\" \"/Users/ookubohikari/HP制作事業/福祉HP模倣実験/syogen-careheart.com/cms/wp-content/themes/marutomirenta_theme/tmpl-img/illust_separate.png\")",
+      "Bash(cp \"/Users/ookubohikari/Downloads/ChatGPT Image 2026年5月16日 04_22_41 \\(4\\).png\" \"/Users/ookubohikari/HP制作事業/福祉HP模倣実験/syogen-careheart.com/cms/wp-content/themes/marutomirenta_theme/tmpl-img/illust_stretcher_c.png\")",
+      "Bash(brew install *)",
+      "Bash(grep -n 'らくちん移動機\\\\|\"rs-card__name\">.\\\\{0,80\\\\}らく' \"/Users/ookubohikari/HP制作事業/福祉HP模倣実験/syogen-careheart.com/index.html\")",
+      "Bash(cp \"/Users/ookubohikari/Downloads/icon-ig.svg\" \"/Users/ookubohikari/HP制作事業/福祉HP模倣実験/syogen-careheart.com/cms/wp-content/themes/marutomirenta_theme/tmpl-img/icon-ig.svg\")",
+      "Bash(cp \"/Users/ookubohikari/Downloads/icon-fb.svg\" \"/Users/ookubohikari/HP制作事業/福祉HP模倣実験/syogen-careheart.com/cms/wp-content/themes/marutomirenta_theme/tmpl-img/icon-fb.svg\")",
+      "Bash(grep -n '\"rs-card\">$' \"/Users/ookubohikari/HP制作事業/福祉HP模倣実験/syogen-careheart.com/index.html\")",
+      "Bash(grep -n '^\\\\t\\\\t\\\\t</a>$' \"/Users/ookubohikari/HP制作事業/福祉HP模倣実験/syogen-careheart.com/index.html\")",
+      "Bash(python3)",
+      "Bash(magick identify *)",
+      "Bash(cp \"/Users/ookubohikari/Downloads/PDF_file_icon.svg.png\" icon-pdf.png)",
+      "Bash(cp \"/Users/ookubohikari/Downloads/Instagram_icon.png\" icon-ig-color.png)",
+      "Bash(cp \"/Users/ookubohikari/Downloads/unnamed.webp\" icon-fb-color.webp)",
+      "Read(//Applications/Google Chrome.app/Contents/MacOS/**)",
+      "Read(//Applications/Chromium.app/Contents/MacOS/**)"
+    ]
+  }
+}
