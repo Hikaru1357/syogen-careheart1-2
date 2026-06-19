@@ -992,11 +992,11 @@ html, body{
 	letter-spacing:.04em;
 }
 .rs-sns__grid{
-	display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px;
+	display:grid; grid-template-columns:1fr; gap:24px; max-width:680px; margin-left:auto; margin-right:auto;
 	align-items:start;
 }
 @media (max-width:1199px){
-	.rs-sns__grid{ grid-template-columns:1fr 1fr; }
+	.rs-sns__grid{ grid-template-columns:1fr; }
 }
 @media (max-width:767px){
 	.rs-sns__grid{ grid-template-columns:1fr; }
@@ -1081,32 +1081,40 @@ html, body{
 }
 .rs-sns__post.-news:last-child{ border-bottom:none; }
 .rs-sns__post.-news a{
-	display:flex; flex-direction:column; gap:4px;
-	padding:16px 22px;
+	display:grid;
+	grid-template-columns:auto 1fr;
+	grid-template-areas:"date cat" "title title";
+	align-items:center; gap:8px 10px;
+	padding:18px 22px;
+	border-left:3px solid transparent;
 	text-decoration:none; color:inherit;
-	transition:background .25s;
+	transition:background .25s, border-color .25s;
 }
-.rs-sns__post.-news a:hover{ background:var(--rs-primary-light); }
+.rs-sns__post.-news a:hover{ background:var(--rs-primary-light); border-left-color:var(--rs-primary); }
 .rs-sns__post.-news .rs-sns__post-date{
+	grid-area:date;
 	font-family:"Josefin Sans",sans-serif;
-	font-size:12px; color:var(--rs-primary);
+	font-size:13px; color:var(--rs-text-sub);
 	font-weight:700;
 	margin:0; letter-spacing:.05em;
 }
 .rs-sns__post.-news .rs-sns__post-cat{
-	display:inline-block; align-self:flex-start;
-	background:var(--rs-primary-light);
-	color:var(--rs-primary-dark);
-	font-size:11px; padding:2px 10px; border-radius:999px;
-	margin:0; font-weight:700; letter-spacing:.04em;
+	grid-area:cat; justify-self:start;
+	background:var(--rs-primary);
+	color:#fff;
+	font-size:10.5px; padding:3px 11px; border-radius:4px;
+	margin:0; font-weight:700; letter-spacing:.06em;
 }
 .rs-sns__post.-news a:hover .rs-sns__post-cat{
-	background:#fff;
+	background:var(--rs-primary-dark);
 }
 .rs-sns__post.-news .rs-sns__post-text{
-	font-size:13.5px; line-height:1.6;
+	grid-area:title;
+	font-size:16px; font-weight:700; line-height:1.55;
 	margin:2px 0 0; color:var(--rs-text);
+	transition:color .25s;
 }
+.rs-sns__post.-news a:hover .rs-sns__post-text{ color:var(--rs-primary-dark); }
 
 /* Facebook feed */
 .rs-sns__feed.-fb{
@@ -1491,6 +1499,166 @@ html, body{
 /* ===== Existing original sections soft-hide (jumbotron etc.) ===== */
 .p-jumbotron{ display:none !important; }
 .l-main > .p-section{ display:none !important; }
+
+/* ===== HERO SLIDER（3枚切替：YouTube／リユース／CAREHEART）===== */
+.rs-hero{
+	position:relative !important;
+	padding:0 !important;
+	width:100%;
+	aspect-ratio:1672 / 941;
+	min-height:0 !important;
+	overflow:hidden;
+	background:#000;
+}
+.rs-hero::before, .rs-hero::after{ display:none !important; content:none !important; animation:none !important; }
+@media (max-width:767px){ .rs-hero{ aspect-ratio:4 / 5; } }
+
+.rs-hero__slides{ position:absolute; inset:0; }
+.rs-hero__slide{
+	position:absolute; inset:0;
+	display:flex; align-items:center; justify-content:center;
+	opacity:0; visibility:hidden;
+	transition:opacity .8s ease;
+}
+.rs-hero__slide.is-active{ opacity:1; visibility:visible; z-index:1; }
+
+.rs-hero__media{ position:absolute; inset:0; z-index:0; overflow:hidden; background:#000; }
+.rs-hero__media picture{ display:block; width:100%; height:100%; }
+.rs-hero__media img{ width:100%; height:100%; object-fit:cover; display:block; filter:saturate(1.1) contrast(1.04); }
+
+/* スライド1：YouTube 再生ボタン */
+.rs-hero__video-link{ position:absolute; inset:0; z-index:3; display:flex; align-items:center; justify-content:center; text-decoration:none; }
+.rs-hero__play{ display:inline-flex; filter:drop-shadow(0 6px 18px rgba(0,0,0,.55)); transition:transform .25s ease; }
+.rs-hero__video-link:hover .rs-hero__play{ transform:scale(1.08); }
+@media (max-width:767px){ .rs-hero__play svg{ width:84px; height:58px; } }
+
+/* スライド2：リユース販売（仮）プレースホルダー */
+.rs-hero__media.-placeholder{ background:linear-gradient(135deg,#eef4fb 0%,#bcd5ef 100%); display:flex; align-items:center; justify-content:center; }
+.rs-hero__placeholder{ position:relative; z-index:1; text-align:center; color:var(--rs-primary-dark); padding:20px; }
+.rs-hero__placeholder-label{ display:block; font-size:clamp(26px,5vw,56px); font-weight:800; letter-spacing:.06em; line-height:1.2; }
+.rs-hero__placeholder-note{ display:block; margin-top:14px; font-size:14px; font-weight:600; color:#5a7fa6; }
+
+/* スライド3：CAREHEART テキスト（背景画像＋白オーバーレイ） */
+.rs-hero__overlay{ position:absolute; inset:0; z-index:1; background:rgba(255,255,255,.5); }
+.rs-hero__slide .rs-hero__inner{ position:relative; z-index:2; width:100%; padding:6% 5vw; }
+
+/* ナビ・ドット */
+.rs-hero__nav{
+	position:absolute; top:50%; transform:translateY(-50%); z-index:6;
+	width:46px; height:46px; padding:0; border:none; border-radius:50%;
+	background:rgba(255,255,255,.85); color:var(--rs-primary); font-size:30px; line-height:1;
+	cursor:pointer; display:flex; align-items:center; justify-content:center;
+	transition:all .25s ease; box-shadow:0 4px 14px rgba(0,0,0,.18);
+}
+.rs-hero__nav:hover{ background:var(--rs-primary); color:#fff; }
+.rs-hero__nav.-prev{ left:18px; }
+.rs-hero__nav.-next{ right:18px; }
+.rs-hero__nav span{ display:block; line-height:1; transform:translateY(-0.06em); }
+.rs-hero__dots{ position:absolute; left:0; right:0; bottom:16px; z-index:6; display:flex; gap:10px; justify-content:center; }
+.rs-hero__dot{ width:11px; height:11px; padding:0; border:none; border-radius:50%; background:rgba(255,255,255,.65); box-shadow:0 1px 4px rgba(0,0,0,.3); cursor:pointer; transition:all .25s ease; }
+.rs-hero__dot.is-active{ background:var(--rs-primary); transform:scale(1.25); }
+@media (max-width:575px){
+	.rs-hero__nav{ width:38px; height:38px; font-size:24px; }
+	.rs-hero__nav.-prev{ left:8px; }
+	.rs-hero__nav.-next{ right:8px; }
+}
+
+/* ===== PRODUCT CATEGORY（商品カテゴリ：PC3カラム）===== */
+.rs-category__grid{
+	display:grid;
+	grid-template-columns:repeat(3,1fr);
+	gap:28px;
+}
+@media (max-width:767px){
+	.rs-category__grid{ grid-template-columns:1fr; gap:20px; }
+}
+.rs-cat-card{
+	display:flex; flex-direction:column;
+	background:#fff; border-radius:22px; overflow:hidden;
+	box-shadow:0 10px 28px rgba(0,0,0,.06);
+	transition:transform .35s, box-shadow .35s;
+	text-decoration:none; color:inherit;
+}
+.rs-cat-card:hover{
+	transform:translateY(-4px);
+	box-shadow:0 20px 40px rgba(30,108,181,.18);
+}
+.rs-cat-card__img{
+	aspect-ratio:4 / 3; overflow:hidden; background:#f5f5f5;
+}
+.rs-cat-card__img img{
+	width:100%; height:100%; object-fit:cover; display:block;
+	transition:transform .6s;
+}
+.rs-cat-card:hover .rs-cat-card__img img{ transform:scale(1.04); }
+.rs-cat-card__placeholder{
+	width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+	background:linear-gradient(135deg,#eef4fb 0%,#bcd5ef 100%);
+	color:#5a7fa6; font-size:15px; font-weight:600; letter-spacing:.04em;
+}
+.rs-cat-card__body{
+	padding:24px 20px; text-align:center;
+	display:flex; flex-direction:column; gap:6px;
+}
+.rs-cat-card__en{
+	font-family:var(--rs-font-en);
+	font-size:16px; color:var(--rs-gold);
+	letter-spacing:.16em; text-transform:uppercase; font-weight:600;
+}
+.rs-cat-card__ja{
+	font-size:22px; font-weight:700; color:var(--rs-text); letter-spacing:.04em;
+}
+@media (max-width:767px){
+	.rs-cat-card__img{ aspect-ratio:16 / 10; }
+}
+
+/* ===== 公式SNS（ロゴ）===== */
+/* ===== 公式SNSフォローバナー（NEWS下・目立たせる）===== */
+.rs-sns__follow-bar{
+	max-width:680px; margin:26px auto 0;
+	background:linear-gradient(120deg, var(--rs-primary) 0%, var(--rs-primary-dark) 100%);
+	border-radius:20px; padding:22px 30px;
+	display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;
+	box-shadow:0 16px 32px rgba(30,108,181,.26);
+	position:relative; overflow:hidden;
+}
+.rs-sns__follow-bar::before{
+	content:""; position:absolute; right:-40px; top:-50px;
+	width:170px; height:170px; border-radius:50%;
+	background:rgba(255,255,255,.08); pointer-events:none;
+}
+.rs-sns__follow-bar-text{
+	color:#fff; font-weight:700; font-size:18px; letter-spacing:.04em;
+	position:relative; z-index:1; line-height:1.4;
+}
+.rs-sns__follow-bar-text .-en{
+	display:block; font-family:var(--rs-font-en);
+	font-size:13px; letter-spacing:.2em; opacity:.85; margin-bottom:4px; font-weight:600;
+}
+.rs-sns__follow-bar-icons{ display:flex; gap:16px; position:relative; z-index:1; }
+.rs-sns__follow-bar-icon{
+	width:56px; height:56px; border-radius:14px;
+	display:inline-flex; align-items:center; justify-content:center;
+	box-shadow:0 8px 18px rgba(0,0,0,.22); overflow:hidden;
+	transition:transform .25s, box-shadow .25s;
+}
+.rs-sns__follow-bar-icon:hover{ transform:translateY(-4px) scale(1.08); box-shadow:0 14px 28px rgba(0,0,0,.32); }
+.rs-sns__follow-bar-icon img{ width:100%; height:100%; object-fit:cover; display:block; }
+@media (max-width:575px){
+	.rs-sns__follow-bar{ flex-direction:column; text-align:center; padding:24px; }
+	.rs-sns__follow-bar-icon{ width:54px; height:54px; }
+}
+
+/* ===== ヒーロー スライド内CTA（2・3枚目／中央下）===== */
+.rs-hero__actions{
+	position:absolute; left:0; right:0; bottom:9%;
+	z-index:5;
+	display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
+	padding:0 5vw;
+}
+@media (max-width:575px){
+	.rs-hero__actions{ bottom:6%; gap:8px; }
+}
 </style>
 <!-- ===== /REFRESH STYLE ===== -->
 
@@ -1603,12 +1771,9 @@ html, body{
 	<nav class="p-sp-menu__main-menu">
 					<ul class="p-sp-menu__main-menu-list">
 									<li class="p-sp-menu__main-menu-item"><a href="index.html"><span>ホーム</span></a></li>
-									<li class="p-sp-menu__main-menu-item"><a href="products.html"><span>商品紹介</span></a></li>
-									<li class="p-sp-menu__main-menu-item"><a href="voice.html"><span>お客様の声</span></a></li>
-									<li class="p-sp-menu__main-menu-item"><a href="faq.html"><span>よくある質問</span></a></li>
-									<li class="p-sp-menu__main-menu-item"><a href="information.html"><span>新着情報</span></a></li>
-									<li class="p-sp-menu__main-menu-item"><a href="index.html%3Fp=9.html"><span>会社案内</span></a></li>
-									<li class="p-sp-menu__main-menu-item"><a href="cms/wp-content/uploads/catalog_260507.pdf"><span>最新カタログ</span></a></li>
+									<li class="p-sp-menu__main-menu-item"><a href="#rs-category"><span>商品紹介</span></a></li>
+									<li class="p-sp-menu__main-menu-item"><a href="#rs-sns"><span>新着情報</span></a></li>
+									<li class="p-sp-menu__main-menu-item"><a href="#rs-company"><span>会社案内</span></a></li>
 									<li class="p-sp-menu__main-menu-item"><a href="cms/contact/index.html"><span>お問い合わせ</span></a></li>
 							</ul>
 			</nav>
@@ -1674,12 +1839,9 @@ html, body{
 						</nav>
 															<nav class="p-main-menu">
 						<ul class="p-main-menu__list">
-															<li class="p-main-menu__item"><a href="products.html" target=""><span>商品紹介</span></a></li>
-															<li class="p-main-menu__item"><a href="voice.html" target=""><span>お客様の声</span></a></li>
-															<li class="p-main-menu__item"><a href="faq.html" target=""><span>よくある質問</span></a></li>
-															<li class="p-main-menu__item"><a href="information.html" target=""><span>新着情報</span></a></li>
-															<li class="p-main-menu__item"><a href="index.html%3Fp=9.html" target=""><span>会社案内</span></a></li>
-															<li class="p-main-menu__item"><a href="cms/wp-content/uploads/catalog_260507.pdf" target="_blank"><span>最新カタログ</span></a></li>
+															<li class="p-main-menu__item"><a href="#rs-category" target=""><span>商品紹介</span></a></li>
+															<li class="p-main-menu__item"><a href="#rs-sns" target=""><span>新着情報</span></a></li>
+															<li class="p-main-menu__item"><a href="#rs-company" target=""><span>会社案内</span></a></li>
 															<li class="p-main-menu__item"><a href="cms/contact/index.html" target=""><span>お問い合わせ</span></a></li>
 													</ul>
 					</nav>
@@ -1778,99 +1940,85 @@ html, body{
 
 <!-- ===== HERO (renewed) ===== -->
 <section class="rs-hero" id="rs-hero">
-	<div class="rs-hero__inner">
-		<div class="rs-hero__text">
-			<p class="rs-hero__copy">介護・搬送現場の<span class="em">「負担」</span>を、<br>確かな技術で、軽くする。</p>
-			<h2 class="rs-hero__ttl"><span class="grn">CARE</span>HEART</h2>
-			<p class="rs-hero__lead">〈らく段〉シリーズをはじめ、搬送用昇降ストレッチャー、緊急搬送・福祉介護機器まで——医療・介護・救急の最前線で求められる機能性と信頼性に、現場目線のラインナップで応え続けます。</p>
-			<div class="rs-hero__cta">
-				<a href="products.html" class="rs-btn -fill rs-btn--hero">
+	<div class="rs-hero__slides" id="rs-hero-slides">
+
+		<!-- スライド1：YouTubeバナー（②の3枚目より） -->
+		<div class="rs-hero__slide is-active">
+			<div class="rs-hero__media -video">
+				<img src="https://img.youtube.com/vi/io9CsfkCdaI/maxresdefault.jpg" alt="紹介動画サムネイル" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/io9CsfkCdaI/hqdefault.jpg';">
+			</div>
+			<a href="https://youtu.be/io9CsfkCdaI" target="_blank" rel="noopener" class="rs-hero__video-link" aria-label="YouTube動画を開く">
+				<span class="rs-hero__play" aria-hidden="true">
+					<svg viewBox="0 0 68 48" width="120" height="84"><path d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#ff0000"/><path d="M 45,24 27,14 27,34" fill="#fff"/></svg>
+				</span>
+			</a>
+		</div><!-- /.rs-hero__slide (1) -->
+
+		<!-- スライド2：リユース販売（仮）※後で画像を差し込む -->
+		<div class="rs-hero__slide">
+			<div class="rs-hero__media">
+				<img src="cms/wp-content/uploads/hero_reuse_260619.png" alt="リユース販売">
+			</div>
+			<div class="rs-hero__actions">
+				<a href="#rs-category" class="rs-btn -line rs-btn--hero">
 					<span class="rs-btn__avatar">
 						<img src="https://syogen-careheart.com/cms/wp-content/uploads/pic_rakudan_top01.jpg" alt="可搬型階段昇降機らく段">
 					</span>
 					<span class="rs-btn__label">商品を見る</span>
 				</a>
-				<a href="cms/contact/index.html" class="rs-btn -line rs-btn--hero">
+				<a href="cms/contact/index.html" class="rs-btn -fill rs-btn--hero">
 					<span class="rs-btn__avatar" aria-hidden="true">
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg>
 					</span>
 					<span class="rs-btn__label">お問い合わせ</span>
 				</a>
 			</div>
-		</div>
+		</div><!-- /.rs-hero__slide (2) -->
+
+		<!-- スライド3：CAREHEART -->
+		<div class="rs-hero__slide">
+			<div class="rs-hero__media">
+				<img src="cms/wp-content/uploads/hero_careheart_260619.png" alt="介護・搬送現場の「負担」を、確かな技術で、軽くする。CAREHEART">
+			</div>
+			<div class="rs-hero__actions">
+				<a href="#rs-category" class="rs-btn -line rs-btn--hero">
+					<span class="rs-btn__avatar">
+						<img src="https://syogen-careheart.com/cms/wp-content/uploads/pic_rakudan_top01.jpg" alt="可搬型階段昇降機らく段">
+					</span>
+					<span class="rs-btn__label">商品を見る</span>
+				</a>
+				<a href="cms/contact/index.html" class="rs-btn -fill rs-btn--hero">
+					<span class="rs-btn__avatar" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg>
+					</span>
+					<span class="rs-btn__label">お問い合わせ</span>
+				</a>
+			</div>
+		</div><!-- /.rs-hero__slide (3) -->
+
+	</div><!-- /.rs-hero__slides -->
+
+	<button type="button" class="rs-hero__nav -prev" aria-label="前のスライド"><span aria-hidden="true">&lsaquo;</span></button>
+	<button type="button" class="rs-hero__nav -next" aria-label="次のスライド"><span aria-hidden="true">&rsaquo;</span></button>
+	<div class="rs-hero__dots" id="rs-hero-dots">
+		<button type="button" class="rs-hero__dot is-active" aria-label="スライド1へ"></button>
+		<button type="button" class="rs-hero__dot" aria-label="スライド2へ"></button>
+		<button type="button" class="rs-hero__dot" aria-label="スライド3へ"></button>
 	</div>
 </section><!-- /.rs-hero -->
-
-<!-- ===== CAROUSEL (5枚を3秒ごとに自動切替) ===== -->
-<section class="rs-carousel" id="rs-carousel">
-	<div class="rs-carousel__inner">
-		<div class="rs-carousel__viewport">
-			<div class="rs-carousel__track" id="rs-carousel-track">
-				<div class="rs-carousel__slide">
-					<a href="https://www.youtube.com/watch?v=f3zlZIbWMxE" target="_blank" rel="noopener">
-						<picture>
-							<source srcset="cms/wp-content/uploads/rakudan_youtube_260227_l.jpg" media="(min-width:768px)">
-							<source srcset="cms/wp-content/uploads/rakudan_youtube_260227_s.jpg" media="(max-width: 767px)">
-							<img src="cms/wp-content/uploads/rakudan_youtube_260227_l.jpg" alt="らく段紹介動画">
-						</picture>
-					</a>
-				</div>
-				<div class="rs-carousel__slide">
-					<a href="cms/rakudan_kaigonintei/index.html">
-						<picture>
-							<source srcset="cms/wp-content/uploads/kaigonintei_banner2.jpg" media="(min-width:768px)">
-							<source srcset="cms/wp-content/uploads/kaigonintei_banner_s2.jpg" media="(max-width: 767px)">
-							<img src="cms/wp-content/uploads/kaigonintei_banner2.jpg" alt="介護認定について">
-						</picture>
-					</a>
-				</div>
-				<div class="rs-carousel__slide">
-					<a href="cms/products/w5w-w5g/index.html">
-						<picture>
-							<source srcset="cms/wp-content/uploads/pic_jumbotron01.jpg" media="(min-width:768px)">
-							<source srcset="cms/wp-content/uploads/pic_jumbotron01_sp.jpg" media="(max-width: 767px)">
-							<img src="cms/wp-content/uploads/pic_jumbotron01.jpg" alt="可搬型階段昇降機らく段">
-						</picture>
-					</a>
-				</div>
-				<div class="rs-carousel__slide">
-					<a href="cms/products/w7w/index.html">
-						<picture>
-							<source srcset="cms/wp-content/uploads/pic_jumbotron03_260220.jpg" media="(min-width:768px)">
-							<source srcset="cms/wp-content/uploads/pic_jumbotron03_sp_260220.jpg" media="(max-width: 767px)">
-							<img src="cms/wp-content/uploads/pic_jumbotron03_260220.jpg" alt="荷物用らく段 NEWボギー">
-						</picture>
-					</a>
-				</div>
-			</div>
-			<button type="button" class="rs-carousel__nav -prev" aria-label="前へ">‹</button>
-			<button type="button" class="rs-carousel__nav -next" aria-label="次へ">›</button>
-		</div>
-		<div class="rs-carousel__dots" id="rs-carousel-dots">
-			<button type="button" class="rs-carousel__dot is-active" data-i="0" aria-label="スライド1"></button>
-			<button type="button" class="rs-carousel__dot" data-i="1" aria-label="スライド2"></button>
-			<button type="button" class="rs-carousel__dot" data-i="2" aria-label="スライド3"></button>
-			<button type="button" class="rs-carousel__dot" data-i="3" aria-label="スライド4"></button>
-		</div>
-	</div>
-</section><!-- /.rs-carousel -->
 
 <!-- ===== SNS (Facebook / Instagram) ===== -->
 <section class="rs-section rs-sns -bg" id="rs-sns">
 	<div class="rs-section__inner">
 		<div class="rs-section__head">
 			<h2 class="rs-section__ttl" data-bg-en="News"><span class="en">News</span>最新情報</h2>
-			<p class="rs-section__lead">FacebookとInstagramで日々の活動・新製品情報を発信しています。</p>
-			<p class="rs-sns__note">※以下SNSは例です</p>
+			<p class="rs-section__lead">日々の活動・新製品情報を発信しています。</p>
 		</div>
 		<div class="rs-sns__grid">
 
 			<!-- NEWS (新着情報) -->
 			<section class="rs-sns__col">
 				<div class="rs-sns__head -news">
-					<span class="rs-sns__ic" aria-hidden="true">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M4 4h13v16H4z"/><path d="M17 8h3v9a3 3 0 0 1-3 3"/><line x1="7" y1="8" x2="14" y2="8"/><line x1="7" y1="12" x2="14" y2="12"/><line x1="7" y1="16" x2="11" y2="16"/></svg>
-					</span>
 					<span class="rs-sns__info">
 						<span class="rs-sns__label">NEWS</span>
 						<span class="rs-sns__handle">新着情報</span>
@@ -1904,383 +2052,68 @@ html, body{
 					<span class="rs-sns__more-arrow">→</span>
 				</a>
 			</section>
-
-			<!-- Instagram -->
-			<section class="rs-sns__col">
-				<div class="rs-sns__head -ig">
-					<span class="rs-sns__ic -img" aria-hidden="true">
-						<img src="cms/wp-content/themes/marutomirenta_theme/tmpl-img/icon-ig-color.png" alt="">
-					</span>
-					<span class="rs-sns__info">
-						<span class="rs-sns__label">INSTAGRAM</span>
-						<span class="rs-sns__handle">@ssk_careheart</span>
-					</span>
-					<span class="rs-sns__cta">フォロー</span>
-				</div>
-				<div class="rs-sns__feed -ig">
-					<div class="rs-sns__post -ig">
-						<img src="https://syogen-careheart.com/cms/wp-content/uploads/pic_rakudan_top01.jpg" alt="らく段">
-					</div>
-					<div class="rs-sns__post -ig">
-						<img src="https://syogen-careheart.com/cms/wp-content/uploads/pic_newbogey_top01_260220.jpg" alt="NEWボギー">
-					</div>
-					<div class="rs-sns__post -ig">
-						<img src="https://syogen-careheart.com/cms/wp-content/uploads/pic_stretcher_c_top01.jpg" alt="ストレッチャーC">
-					</div>
-					<div class="rs-sns__post -ig">
-						<img src="https://syogen-careheart.com/cms/wp-content/uploads/pic_e_stocon_top01.jpg" alt="Eストコン">
-					</div>
-					<div class="rs-sns__post -ig">
-						<img src="https://syogen-careheart.com/cms/wp-content/uploads/らく段セパレートtop.jpg" alt="らく段セパレート">
-					</div>
-					<div class="rs-sns__post -ig">
-						<img src="https://syogen-careheart.com/cms/wp-content/uploads/らくちん移動機1800x1200.jpg" alt="らくちん移動機">
-					</div>
-				</div>
-				<div class="rs-sns__more">
-					<span>投稿をもっと見る</span>
-					<span class="rs-sns__more-arrow">→</span>
-				</div>
-			</section>
-
-			<!-- Facebook -->
-			<section class="rs-sns__col">
-				<div class="rs-sns__head -fb">
-					<span class="rs-sns__ic -img" aria-hidden="true">
-						<img src="cms/wp-content/themes/marutomirenta_theme/tmpl-img/icon-fb-color.webp" alt="">
-					</span>
-					<span class="rs-sns__info">
-						<span class="rs-sns__label">FACEBOOK</span>
-						<span class="rs-sns__handle">松原企業株式会社 福祉介護事業部</span>
-					</span>
-					<span class="rs-sns__cta">いいね！</span>
-				</div>
-				<ul class="rs-sns__feed -fb">
-					<li class="rs-sns__post -fb">
-						<div class="rs-sns__post-img">
-							<img src="cms/wp-content/uploads/kaigonintei_banner2.jpg" alt="介護認定">
-						</div>
-						<div class="rs-sns__post-body">
-							<p class="rs-sns__post-date">2026.04.28</p>
-							<p class="rs-sns__post-text">和歌山営業所が移転いたしました！より広いショールームでらく段シリーズを実際に体感いただけます。</p>
-							<div class="rs-sns__post-meta">
-								<span class="-like">♥ 24</span>
-								<span class="-cmt">💬 3</span>
-								<span class="-share">↗ 2</span>
-							</div>
-						</div>
-					</li>
-					<li class="rs-sns__post -fb">
-						<div class="rs-sns__post-img">
-							<img src="cms/wp-content/uploads/pic_jumbotron01.jpg" alt="最新カタログ">
-						</div>
-						<div class="rs-sns__post-body">
-							<p class="rs-sns__post-date">2026.03.10</p>
-							<p class="rs-sns__post-text">最新カタログVol.2を公開しました。らく段シリーズの最新ラインナップを掲載しています。</p>
-							<div class="rs-sns__post-meta">
-								<span class="-like">♥ 18</span>
-								<span class="-cmt">💬 2</span>
-								<span class="-share">↗ 5</span>
-							</div>
-						</div>
-					</li>
-					<li class="rs-sns__post -fb">
-						<div class="rs-sns__post-img">
-							<img src="cms/wp-content/uploads/pic_jumbotron03_260220.jpg" alt="東京営業所">
-						</div>
-						<div class="rs-sns__post-body">
-							<p class="rs-sns__post-date">2026.02.01</p>
-							<p class="rs-sns__post-text">東京営業所を開設いたしました！関東エリアのお客様への対応がよりスムーズになります。</p>
-							<div class="rs-sns__post-meta">
-								<span class="-like">♥ 32</span>
-								<span class="-cmt">💬 4</span>
-								<span class="-share">↗ 7</span>
-							</div>
-						</div>
-					</li>
-				</ul>
-				<div class="rs-sns__more">
-					<span>投稿をもっと見る</span>
-					<span class="rs-sns__more-arrow">→</span>
-				</div>
-			</section>
-
 		</div>
+
+		<!-- 公式SNSフォローバナー -->
+		<aside class="rs-sns__follow-bar">
+			<p class="rs-sns__follow-bar-text"><span class="-en">FOLLOW US</span>公式SNSで最新情報を発信中！</p>
+			<div class="rs-sns__follow-bar-icons">
+				<a class="rs-sns__follow-bar-icon" href="#" target="_blank" rel="noopener" aria-label="Instagram">
+					<img src="cms/wp-content/themes/marutomirenta_theme/tmpl-img/icon-ig-color.png" alt="Instagram">
+				</a>
+				<a class="rs-sns__follow-bar-icon" href="#" target="_blank" rel="noopener" aria-label="Facebook">
+					<img src="cms/wp-content/themes/marutomirenta_theme/tmpl-img/icon-fb-color.webp" alt="Facebook">
+				</a>
+			</div>
+		</aside>
 	</div>
 </section><!-- /.rs-sns -->
 
-<!-- ===== RAKUDAN ===== -->
-<section class="rs-section rs-rakudan" id="rs-rakudan">
-	<div class="rs-section__inner">
-		<div class="rs-attention">
-			<h3 class="rs-attention__ttl">注意 <small>可搬型階段昇降機「らく段」について</small></h3>
-			<ul>
-				<li>注1．他社おいて令和8年1月1日以降、当社商品と類似した名称・デザインの商品が販売されており、これらの商品とはなんら関りがなく、当社が製造・検査・品質管理を行っていない商品であり、当社商品は管理番号で管理されておりますのでお気をつけください。</li>
-				<li>注2．令和7年12月31日以前に購入されたお客様については、公益財団法人テクノエイド協会が発行している弊社TAISコードを御使用してください。</li>
-				<li>注3．令和8年1月1日以降、他社類似商品は、公益財団法人テクノエイド協会発行の当社TAISコードは一切使用できませんので、お客様におかれましては十分ご注意ください。</li>
-				<li>注4．他社において、可搬型階段昇降機安全指導員講習講師資格 機種別講習講師「らく段」の講習講師資格がありません。また、指導員許可証も発行できない為、公益財団法人テクノエイド協会からの認定証・資格証も発行できませんのでお気をつけください。</li>
-			</ul>
-			<p>正規の品質保証・アフターサービス・講習は、必ず当社正規販売ルートにお問い合わせください。</p>
-			<p>◆公益財団法人テクノエイド協会ホームページ <a href="https://www.techno-aids.or.jp/" target="_blank" rel="noopener">https://www.techno-aids.or.jp/</a></p>
-			<p class="sign">株式会社松原企業株式会社（ショウゲンキギョウ）</p>
-		</div>
-
-		<div class="rs-section__head -left">
-			<h2 class="rs-section__ttl" data-bg-en="RAKUDAN"><span class="en">RAKUDAN</span>らく段シリーズ</h2>
-			<p class="rs-section__lead">階段介護の負担軽減に強い味方。クローラー式階段昇降機シリーズで、現場の「運ぶ」を変えていきます。</p>
-		</div>
-
-		<div class="rs-products">
-			<article class="rs-card" data-href="index.html%3Fp=98.html">
-				<div class="rs-card__img">
-					<img src="https://syogen-careheart.com/cms/wp-content/uploads/pic_rakudan_top01.jpg" alt="可搬型階段昇降機らく段">
-				</div>
-				<div class="rs-card__body">
-					<h3 class="rs-card__name">可搬型階段昇降機らく段<span class="sub">［W5W ／ W5G］</span></h3>
-					<div class="rs-card__desc">
-						<p>階段介護の負担軽減に強い味方！ 強いグリップ力のクローラー式階段昇降機</p>
-						<ul>
-							<li>折畳式でコンパクト収納可能</li>
-							<li>昇降時用ハンドル高さ3段階切り替え</li>
-						</ul>
-					</div>
-					<p class="rs-card__notes">
-						<a href="https://syogen-careheart.com/cms/information/価格改定のお知らせ/" target="_blank" rel="noopener">＊価格改定について</a>
-						<a href="https://syogen-careheart.com/cms/information/お客様に感謝を込めてキャンペーン」実施中！/" target="_blank" rel="noopener">＊キャンペーン対象商品</a>
-					</p>
-					<p class="rs-card__rental-note">＊一般レンタル価格は令和5年9月20日より変更となります。</p>
-					<p class="rs-card__notes">
-						<a class="-train" href="https://syogen-careheart.com/cms/information/可搬型階段昇降機安全指導員講習について/" target="_blank" rel="noopener">＊可搬型階段昇降機安全指導員講習について</a>
-					</p>
-					<p class="rs-card__alert">介護保険適用でのレンタルについては適用の要件があり、お住まいの地域の貸与事業所とレンタル期間も含めて交渉が必要となります。</p>
-					<div class="rs-card__prices">
-						<div class="rs-card__price"><span class="rs-card__price-label">購入</span><span class="rs-card__price-val">748,000円<span class="-tax">（税抜価格 680,000円）</span></span></div>
-						<div class="rs-card__price"><span class="rs-card__price-label">レンタル</span><span class="rs-card__price-val">価格はお問い合わせください。</span></div>
-					</div>
-				</div>
-			</article>
-			<article class="rs-card" data-href="index.html%3Fp=119.html">
-				<div class="rs-card__img">
-					<img src="https://syogen-careheart.com/cms/wp-content/uploads/pic_newbogey_top01_260220.jpg" alt="荷物用らく段 NEWボギー">
-				</div>
-				<div class="rs-card__body">
-					<h3 class="rs-card__name">荷物用らく段 NEWボギー<span class="sub">［W7W］</span></h3>
-					<div class="rs-card__desc">
-						<p>荷物用クローラー式階段昇降機は、重たい荷物を運ぶ階段の上り下りにとっても便利！</p>
-						<ul>
-							<li>スピード三段階切替え可能</li>
-							<li>折りたたみ式のコンパクト設計</li>
-						</ul>
-					</div>
-					<p class="rs-card__notes">
-						<a href="https://syogen-careheart.com/cms/information/価格改定のお知らせ/" target="_blank" rel="noopener">＊価格改定について</a>
-						<a href="https://syogen-careheart.com/cms/information/お客様に感謝を込めてキャンペーン」実施中！/" target="_blank" rel="noopener">＊キャンペーン対象商品</a>
-					</p>
-					<p class="rs-card__rental-note">＊一般レンタル価格は令和5年9月20日より変更となります。</p>
-					<div class="rs-card__prices">
-						<div class="rs-card__price"><span class="rs-card__price-label">購入</span><span class="rs-card__price-val">418,000円<span class="-tax">（税抜価格 380,000円）</span></span></div>
-						<div class="rs-card__price"><span class="rs-card__price-label">レンタル</span><span class="rs-card__price-val">価格はお問い合わせください。</span></div>
-					</div>
-				</div>
-			</article>
-			<article class="rs-card" data-href="index.html%3Fp=646.html">
-				<div class="rs-card__img">
-					<img src="https://syogen-careheart.com/cms/wp-content/uploads/らく段セパレートtop.jpg" alt="らく段セパレート">
-				</div>
-				<div class="rs-card__body">
-					<h3 class="rs-card__name"><span class="badge-new">NEW</span>らく段セパレート<span class="sub">［MC-3A ／ MC-3B ／ MC-3C ／ MC-6D］</span></h3>
-					<div class="rs-card__desc">
-						<p>車椅子部分と駆動部分が着脱できる分体階段昇降機</p>
-					</div>
-					<p class="rs-card__dev">＊開発中商品</p>
-					<div class="rs-card__prices">
-						<div class="rs-card__price"><span class="rs-card__price-label">購入</span><span class="rs-card__price-val">MC-3A＆MC-3B：748,000円<span class="-tax">（税抜価格 680,000円）</span></span></div>
-						<div class="rs-card__price"><span class="rs-card__price-label">レンタル</span><span class="rs-card__price-val">価格はお問い合わせください。</span></div>
-					</div>
-				</div>
-			</article>
-			<article class="rs-card" data-href="index.html%3Fp=554.html">
-				<div class="rs-card__img">
-					<img src="https://syogen-careheart.com/cms/wp-content/uploads/らくちん移動機1800x1200.jpg" alt="らくちん移動機">
-				</div>
-				<div class="rs-card__body">
-					<h3 class="rs-card__name">らくちん移動機(電動式)<span class="sub">［BK-063 A／B ＊開発中商品］</span></h3>
-					<div class="rs-card__desc">
-						<p>電動式で高さが自由に調整が可能！前・後ろどちらからも乗り降りが可能で様々な環境に合わせて移動をサポート！</p>
-					</div>
-					<p class="rs-card__dev">＊開発中商品</p>
-					<div class="rs-card__prices">
-						<div class="rs-card__price"><span class="rs-card__price-label">購入</span><span class="rs-card__price-val">385,000円<span class="-tax">（税抜価格 350,000円）</span></span></div>
-						<div class="rs-card__price"><span class="rs-card__price-label">レンタル</span><span class="rs-card__price-val">価格はお問い合わせください。</span></div>
-					</div>
-				</div>
-			</article>
-		</div>
-
-		<div class="rs-acc">
-			<h3 class="rs-acc__ttl">らく段シリーズ 付属品</h3>
-			<ul class="rs-acc__list">
-				<li class="rs-acc__item">
-					<a href="index.html%3Fp=127.html">
-						<div class="rs-acc__img"><img src="https://syogen-careheart.com/cms/wp-content/uploads/pic_crawler_belt01.jpg" alt="クローラーベルト"></div>
-						<p class="rs-acc__name">クローラーベルト（2本セット）</p>
-						<p class="rs-acc__price">52,800円（税抜 48,000円）<br>※詳細はお問い合わせください</p>
-					</a>
-				</li>
-				<li class="rs-acc__item">
-					<a href="index.html%3Fp=129.html">
-						<div class="rs-acc__img"><img src="https://syogen-careheart.com/cms/wp-content/uploads/pic_battery01.jpg" alt="専用バッテリー"></div>
-						<p class="rs-acc__name">専用バッテリー</p>
-						<p class="rs-acc__price">58,300円（税抜 53,000円）<br>※詳細はお問い合わせください</p>
-					</a>
-				</li>
-			</ul>
-		</div>
-	</div>
-</section><!-- /.rs-rakudan -->
-
-<!-- ===== WELFARE ===== -->
-<section class="rs-section rs-welfare -bg" id="rs-welfare">
+<!-- ===== PRODUCT CATEGORY（商品カテゴリ）===== -->
+<section class="rs-section rs-category" id="rs-category">
 	<div class="rs-section__inner">
 		<div class="rs-section__head -left">
-			<h2 class="rs-section__ttl" data-bg-en="WELFARE"><span class="en">WELFARE</span>救急搬送・福祉器具</h2>
-			<p class="rs-section__lead">病院・介護施設・介護タクシー業界に向けた、安心・安全のストレッチャーと福祉器具をご用意しています。</p>
+			<h2 class="rs-section__ttl" data-bg-en="Product Categories"><span class="en">Product Categories</span>商品カテゴリ</h2>
 		</div>
 
-		<div class="rs-products">
-			<article class="rs-card" data-href="index.html%3Fp=131.html">
-				<div class="rs-card__img">
-					<img src="https://syogen-careheart.com/cms/wp-content/uploads/pic_stretcher_c_top01.jpg" alt="搬送用昇降ストレッチャーC">
-				</div>
-				<div class="rs-card__body">
-					<h3 class="rs-card__name">搬送用昇降ストレッチャーC</h3>
-					<div class="rs-card__desc">
-						<p>病院・介護施設・介護タクシー業界に人気のストレッチャーです！</p>
-						<p>従来のストレッチャーよりも有効スペースを確保しました。</p>
-						<p><strong>【特徴】</strong></p>
-						<ul>
-							<li>背上げ部分のパイプが折り畳めて、約30cm短くなります</li>
-							<li>背上げは自由な角度に調整が可能</li>
-							<li>昇降の高さは自由に調整が可能</li>
-							<li>安心・安全のストッパー付きキャスター</li>
-						</ul>
-					</div>
-					<p class="rs-card__notes">
-						<a href="https://syogen-careheart.com/cms/information/価格改定のお知らせ/" target="_blank" rel="noopener">＊価格改定について</a>
-						<a href="https://syogen-careheart.com/cms/information/お客様に感謝を込めてキャンペーン」実施中！/" target="_blank" rel="noopener">＊キャンペーン対象商品</a>
-					</p>
-					<p class="rs-card__rental-note">＊一般レンタル価格は令和5年9月20日より変更となります。</p>
-					<div class="rs-card__prices">
-						<div class="rs-card__price"><span class="rs-card__price-label">購入</span><span class="rs-card__price-val">308,000円<span class="-tax">（税抜価格 280,000円）</span></span></div>
-						<div class="rs-card__price"><span class="rs-card__price-label">レンタル</span><span class="rs-card__price-val">価格はお問い合わせください。</span></div>
-					</div>
-				</div>
-			</article>
-			<article class="rs-card" data-href="index.html%3Fp=134.html">
-				<div class="rs-card__img">
-					<img src="https://syogen-careheart.com/cms/wp-content/uploads/pic_e_stocon_top01.jpg" alt="両開き式電動ストレッチャー Eストコン">
-				</div>
-				<div class="rs-card__body">
-					<h3 class="rs-card__name">両開き式電動ストレッチャー Eストコン</h3>
-					<div class="rs-card__desc">
-						<p>車内スペースが有効活用でき、ストレッチャー送迎がもっと楽になる！</p>
-						<p><strong>【特徴】</strong></p>
-						<ul>
-							<li>ボタン1つで無段階昇降可能！</li>
-							<li>背上げ5段階調整可能！</li>
-							<li>折畳み式でコンパクト収納が可能！</li>
-							<li>安心・安全のストッパー付きキャスター</li>
-						</ul>
-					</div>
-					<p class="rs-card__notes">
-						<a href="https://syogen-careheart.com/cms/information/価格改定のお知らせ/" target="_blank" rel="noopener">＊価格改定について</a>
-						<a href="https://syogen-careheart.com/cms/information/お客様に感謝を込めてキャンペーン」実施中！/" target="_blank" rel="noopener">＊キャンペーン対象商品</a>
-					</p>
-					<p class="rs-card__rental-note">＊一般レンタル価格は令和5年9月20日より変更となります。</p>
-					<div class="rs-card__prices">
-						<div class="rs-card__price"><span class="rs-card__price-label">購入</span><span class="rs-card__price-val">330,000円<span class="-tax">（税抜価格 300,000円）</span></span></div>
-						<div class="rs-card__price"><span class="rs-card__price-label">レンタル</span><span class="rs-card__price-val">価格はお問い合わせください。</span></div>
-					</div>
-				</div>
-			</article>
-		</div>
+		<div class="rs-category__grid">
 
-		<div class="rs-acc" style="margin-bottom:32px;">
-			<h3 class="rs-acc__ttl">救急搬送用品</h3>
-			<ul class="rs-acc__list">
-				<li class="rs-acc__item">
-					<a href="index.html%3Fp=136.html">
-						<div class="rs-acc__img"><img src="https://syogen-careheart.com/cms/wp-content/uploads/pic_stretcher_or01.jpg" alt="フォルディングストレッチャー（オレンジ）"></div>
-						<p class="rs-acc__name">フォルディングストレッチャー（オレンジ）</p>
-						<p class="rs-acc__price">23,100円（税抜 21,000円）</p>
-					</a>
-				</li>
-				<li class="rs-acc__item">
-					<a href="index.html%3Fp=138.html">
-						<div class="rs-acc__img"><img src="https://syogen-careheart.com/cms/wp-content/uploads/pic_stretcher_gr01.jpg" alt="フォルディングストレッチャー（グリーン / オレンジ）"></div>
-						<p class="rs-acc__name">フォルディングストレッチャー（グリーン／オレンジ）</p>
-						<p class="rs-acc__price">38,500円（税抜 35,000円）</p>
-					</a>
-				</li>
-				<li class="rs-acc__item">
-					<a href="index.html%3Fp=140.html">
-						<div class="rs-acc__img"><img src="https://syogen-careheart.com/cms/wp-content/uploads/pic_scoop_stretcher01-1.jpg" alt="スクープストレッチャー"></div>
-						<p class="rs-acc__name">スクープストレッチャー</p>
-						<p class="rs-acc__price">要問い合わせ</p>
-					</a>
-				</li>
-			</ul>
-		</div>
+			<!-- 1. 昇降機 -->
+			<a class="rs-cat-card" href="products.html">
+				<div class="rs-cat-card__img">
+					<img src="cms/wp-content/uploads/category_stairlift_260619.png" alt="昇降機">
+				</div>
+				<div class="rs-cat-card__body">
+					<span class="rs-cat-card__en">Stair Lifts</span>
+					<span class="rs-cat-card__ja">昇降機</span>
+				</div>
+			</a>
 
-		<div class="rs-acc">
-			<h3 class="rs-acc__ttl">付属品</h3>
-			<ul class="rs-acc__list">
-				<li class="rs-acc__item">
-					<a href="index.html%3Fp=146.html">
-						<div class="rs-acc__img"><img src="cms/wp-content/uploads/pic_fastener01-1.jpg" alt="ハイエース専用ファスナー"></div>
-						<p class="rs-acc__name">ハイエース専用ファスナー</p>
-						<p class="rs-acc__price">77,000円（税抜 70,000円）</p>
-					</a>
-				</li>
-				<li class="rs-acc__item">
-					<a href="index.html%3Fp=152.html">
-						<div class="rs-acc__img"><img src="cms/wp-content/uploads/pic_safety_belt01.jpg" alt="安全ベルト"></div>
-						<p class="rs-acc__name">安全ベルト</p>
-						<p class="rs-acc__price">3,850円（税抜 3,500円）</p>
-					</a>
-				</li>
-				<li class="rs-acc__item">
-					<a href="index.html%3Fp=154.html">
-						<div class="rs-acc__img"><img src="cms/wp-content/uploads/pic_caster01.jpg" alt="キャスター"></div>
-						<p class="rs-acc__name">キャスター</p>
-						<p class="rs-acc__price">要問い合わせ</p>
-					</a>
-				</li>
-				<li class="rs-acc__item">
-					<a href="index.html%3Fp=156.html">
-						<div class="rs-acc__img"><img src="cms/wp-content/uploads/pic_bag_rack01_262020.jpg" alt="パックラック"></div>
-						<p class="rs-acc__name">パックラック</p>
-						<p class="rs-acc__price">27,500円（税抜 25,000円）</p>
-					</a>
-				</li>
-				<li class="rs-acc__item">
-					<a href="index.html%3Fp=158.html">
-						<div class="rs-acc__img"><img src="cms/wp-content/uploads/pic_Intravenous_drip01.jpg" alt="どこでも点滴棒・架台"></div>
-						<p class="rs-acc__name">どこでも点滴棒・架台</p>
-						<p class="rs-acc__price">セット 16,500円<br>（税抜 15,000円）</p>
-					</a>
-				</li>
-				<li class="rs-acc__item">
-					<a href="index.html%3Fp=160.html">
-						<div class="rs-acc__img"><img src="cms/wp-content/uploads/pic_cylinder01_soldout3.jpg" alt="酸素ボンベ架台"></div>
-						<p class="rs-acc__name">酸素ボンベ架台</p>
-						<p class="rs-acc__price">要問い合わせ（在庫なし）</p>
-					</a>
-				</li>
-			</ul>
+			<!-- 2. 福祉機器 -->
+			<a class="rs-cat-card" href="products.html">
+				<div class="rs-cat-card__img">
+					<img src="cms/wp-content/uploads/category_welfare_260619.png" alt="福祉機器">
+				</div>
+				<div class="rs-cat-card__body">
+					<span class="rs-cat-card__en">Walfare Products</span>
+					<span class="rs-cat-card__ja">福祉機器</span>
+				</div>
+			</a>
+
+			<!-- 3. リユース ※画像は後で挿入 -->
+			<a class="rs-cat-card" href="#">
+				<div class="rs-cat-card__img">
+					<img src="cms/wp-content/uploads/category_reuse_260619.png" alt="リユース">
+				</div>
+				<div class="rs-cat-card__body">
+					<span class="rs-cat-card__en">Reuse</span>
+					<span class="rs-cat-card__ja">リユース</span>
+				</div>
+			</a>
+
 		</div>
 	</div>
-</section><!-- /.rs-welfare -->
+</section><!-- /.rs-category -->
 
 <!-- ===== MARQUEE: CAREHEART 流れテキスト ===== -->
 <div class="rs-flow" aria-hidden="true">
@@ -2297,65 +2130,6 @@ html, body{
 		<span>CAREHEART</span>
 	</div>
 </div>
-
-<!-- ===== VOICE (お客様の声) ===== -->
-<section class="rs-section rs-voice" id="rs-voice">
-	<div class="rs-section__inner">
-		<div class="rs-section__head">
-			<h2 class="rs-section__ttl" data-bg-en="VOICE"><span class="en">VOICE</span>お客様の声</h2>
-			<p class="rs-section__lead">介護現場・搬送現場でご活用いただいているお客様の声をご紹介します。</p>
-		</div>
-		<div class="rs-voice__grid">
-			<article class="rs-voice__card">
-				<span class="rs-voice__icon" aria-hidden="true">
-					<img src="cms/wp-content/themes/marutomirenta_theme/tmpl-img/img_voice_woman01.png" alt="">
-				</span>
-				<span class="rs-voice__mark" aria-hidden="true">&ldquo;</span>
-				<p class="rs-voice__text">現場の機材を運ぶ際に利用させてもらっています。今まで階段では機材を持って運んでいたので腰に負担を与えていましたが、電動で昇降するボギーを使用させてもらい簡単に利用できる為、重宝しています。また折りたたんで車で移動できるのでいろいろな現場で使用しています。</p>
-				<div class="rs-voice__meta">
-					<p class="rs-voice__author">工事現場監督（50代）</p>
-					<p class="rs-voice__product">荷物用らく段 NEWボギー</p>
-				</div>
-			</article>
-			<article class="rs-voice__card">
-				<span class="rs-voice__icon" aria-hidden="true">
-					<img src="cms/wp-content/themes/marutomirenta_theme/tmpl-img/img_voice_man01.png" alt="">
-				</span>
-				<span class="rs-voice__mark" aria-hidden="true">&ldquo;</span>
-				<p class="rs-voice__text">車椅子の利用者様の送迎に使わせていただいています。自宅の玄関先が階段の方や団地にお住まいの方など、今まで男性3人がかりで運んでいた場所もらく段を使うと女性2人でも簡単に昇降することができ負担も軽減。折り畳みもできるので、車に積んでいろんな現場で使用しています。</p>
-				<div class="rs-voice__meta">
-					<p class="rs-voice__author">介護施設経営(40代)</p>
-					<p class="rs-voice__product">可搬型階段昇降機らく段</p>
-				</div>
-			</article>
-			<article class="rs-voice__card">
-				<span class="rs-voice__icon" aria-hidden="true">
-					<img src="cms/wp-content/themes/marutomirenta_theme/tmpl-img/img_voice_woman01.png" alt="">
-				</span>
-				<span class="rs-voice__mark" aria-hidden="true">&ldquo;</span>
-				<p class="rs-voice__text">リーズナブルなストレッチャーを探していたところ、HPを見て購入しました。最初は安価なストレッチャーなので心配していましたが、使いやすくいろんな小物もついているためとても安心して使わせてもらっています。リクライニングも無段階で調整できるので患者さんにも好評です。</p>
-				<div class="rs-voice__meta">
-					<p class="rs-voice__author">病院看護師（50代）</p>
-					<p class="rs-voice__product">搬送用昇降ストレッチャーC</p>
-				</div>
-			</article>
-			<article class="rs-voice__card">
-				<span class="rs-voice__icon" aria-hidden="true">
-					<img src="cms/wp-content/themes/marutomirenta_theme/tmpl-img/img_voice_man01.png" alt="">
-				</span>
-				<span class="rs-voice__mark" aria-hidden="true">&ldquo;</span>
-				<p class="rs-voice__text">ストレッチャーがコンパクトになるので常時車の助手席に積んで必要な時に使用させていただいています。今までは必要な時に一度事務所に戻らないといけなかったので時間削減でき効率よく仕事ができるようになりました。また電動で上下するので利用者さんも使用する私たちも大変助かっています。</p>
-				<div class="rs-voice__meta">
-					<p class="rs-voice__author">介護タクシー経営者（40代）</p>
-					<p class="rs-voice__product">両開き式電動ストレッチャー Eストコン</p>
-				</div>
-			</article>
-		</div>
-		<p class="rs-section__more">
-			<a href="voice.html" class="rs-btn -line"><span>お客様の声一覧</span></a>
-		</p>
-	</div>
-</section><!-- /.rs-voice -->
 
 <!-- ===== COMPANY ===== -->
 <section class="rs-section rs-company -bg-grn" id="rs-company">
@@ -2984,15 +2758,6 @@ html, body{
 									<span class="rs-cta__pill-arrow">›</span>
 								</a>
 							</li>
-							<li>
-								<a href="cms/wp-content/uploads/catalog_260507.pdf" target="_blank" rel="noopener">
-									<span class="rs-cta__pill-icon -pdf" aria-hidden="true">
-										<img src="cms/wp-content/themes/marutomirenta_theme/tmpl-img/icon-pdf.png" alt="">
-									</span>
-									<span class="rs-cta__pill-label">最新カタログダウンロード</span>
-									<span class="rs-cta__pill-arrow">›</span>
-								</a>
-							</li>
 						</ul>
 
 						<div class="rs-cta__info">
@@ -3085,11 +2850,9 @@ Tel.073-494-6681　Fax.073-494-6682<br />
 				<nav class="p-footer-menu">
 											<ul class="p-footer-menu__list">
 															<li class="p-footer-menu__item"><a href="index.html"><span>ホーム</span></a></li>
-															<li class="p-footer-menu__item"><a href="products.html"><span>商品紹介</span></a></li>
-															<li class="p-footer-menu__item"><a href="voice.html"><span>お客様の声</span></a></li>
-															<li class="p-footer-menu__item"><a href="faq.html"><span>よくある質問</span></a></li>
-															<li class="p-footer-menu__item"><a href="information.html"><span>新着情報</span></a></li>
-															<li class="p-footer-menu__item"><a href="index.html%3Fp=9.html"><span>会社案内</span></a></li>
+															<li class="p-footer-menu__item"><a href="#rs-category"><span>商品紹介</span></a></li>
+															<li class="p-footer-menu__item"><a href="#rs-sns"><span>新着情報</span></a></li>
+															<li class="p-footer-menu__item"><a href="#rs-company"><span>会社案内</span></a></li>
 															<li class="p-footer-menu__item"><a href="cms/contact/index.html"><span>お問い合わせ</span></a></li>
 													</ul>
 																<ul class="p-footer-menu__list">
@@ -3208,6 +2971,65 @@ var wpcf7 = {
 	});
 	go(0);
 	start();
+})();
+</script>
+
+<!-- ===== rs-hero スライダー（3枚・自動4.5秒＋矢印＋ドット）===== -->
+<script>
+(function(){
+	var hero = document.getElementById('rs-hero');
+	if(!hero) return;
+	var slides = hero.querySelectorAll('.rs-hero__slide');
+	var dots = hero.querySelectorAll('.rs-hero__dot');
+	var prevBtn = hero.querySelector('.rs-hero__nav.-prev');
+	var nextBtn = hero.querySelector('.rs-hero__nav.-next');
+	if(slides.length < 2) return;
+	var index = 0, timer = null, interval = 4500;
+	function go(i){
+		index = (i + slides.length) % slides.length;
+		for(var k = 0; k < slides.length; k++){ slides[k].classList.toggle('is-active', k === index); }
+		for(var d = 0; d < dots.length; d++){ dots[d].classList.toggle('is-active', d === index); }
+	}
+	function next(){ go(index + 1); }
+	function start(){ stop(); timer = setInterval(next, interval); }
+	function stop(){ if(timer){ clearInterval(timer); timer = null; } }
+	if(prevBtn) prevBtn.addEventListener('click', function(){ go(index - 1); start(); });
+	if(nextBtn) nextBtn.addEventListener('click', function(){ next(); start(); });
+	for(var i = 0; i < dots.length; i++){
+		(function(idx){ dots[idx].addEventListener('click', function(){ go(idx); start(); }); })(i);
+	}
+	document.addEventListener('visibilitychange', function(){ if(document.hidden) stop(); else start(); });
+	go(0);
+	start();
+})();
+</script>
+
+<!-- ===== ページ内アンカーのスムーズスクロール（出だしから動く easeOut）===== -->
+<script>
+(function(){
+	function ease(t){ return 1 - Math.pow(1 - t, 3); }
+	document.addEventListener('click', function(e){
+		var a = e.target.closest('a[href^="#"]');
+		if(!a) return;
+		var hash = a.getAttribute('href');
+		if(!hash || hash.length < 2) return;
+		var target = document.querySelector(hash);
+		if(!target) return;
+		e.preventDefault();
+		var startY = window.pageYOffset;
+		var endY = Math.max(0, target.getBoundingClientRect().top + startY);
+		var dist = endY - startY;
+		if(Math.abs(dist) < 2){ return; }
+		var dur = 500, t0 = null;
+		function step(now){
+			if(t0 === null) t0 = now;
+			var p = Math.min((now - t0) / dur, 1);
+			window.scrollTo(0, startY + dist * ease(p));
+			if(p < 1) requestAnimationFrame(step);
+			else history.replaceState(null, '', hash);
+		}
+		requestAnimationFrame(step);
+	}, false);
 })();
 </script>
 
