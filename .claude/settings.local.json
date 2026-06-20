@@ -21,7 +21,12 @@
       "Bash(cp \"/Users/ookubohikari/Downloads/Instagram_icon.png\" icon-ig-color.png)",
       "Bash(cp \"/Users/ookubohikari/Downloads/unnamed.webp\" icon-fb-color.webp)",
       "Read(//Applications/Google Chrome.app/Contents/MacOS/**)",
-      "Read(//Applications/Chromium.app/Contents/MacOS/**)"
+      "Read(//Applications/Chromium.app/Contents/MacOS/**)",
+      "Bash(gh repo *)",
+      "Bash(gh api *)",
+      "Bash(git remote *)",
+      "Bash(git fetch *)",
+      "Bash(git add *)"
     ]
   }
 }
